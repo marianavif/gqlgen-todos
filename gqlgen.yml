@@ -13,4 +13,20 @@ resolver:
   filename: resolver.go
   type: Resolver
 autobind: 
-- "github.com/marianavif/gqlgen-todos"
+- "github.com/marianavif/gqlgen-todos/graph/model"
+models:
+  ID:
+    model:
+      - github.com/99designs/gqlgen/graphql.ID
+      - gitub.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32
+  Int:
+    model:
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32
+  Todo:
+    fields:
+      user:
+        resolver: true

@@ -1,5 +1,7 @@
 package gqlgen_todos
 
+//go:generate go run github.com/99designs/gqlgen generate
+
 import (
 	"context"
 	"crypto/rand"
@@ -10,7 +12,7 @@ import (
 ) // THIS CODE IS A STARTING POINT ONLY. IT WILL NOT BE UPDATED WITH SCHEMA CHANGES.
 
 type Resolver struct {
-	todos []*Todo
+	todos []*model.Todo
 }
 
 func (r *Resolver) Mutation() MutationResolver {
@@ -22,15 +24,21 @@ func (r *Resolver) Query() QueryResolver {
 
 type mutationResolver struct{ *Resolver }
 
-func (r *mutationResolver) CreateTodo(ctx context.Context, input NewTodo) (*model.Todo, error) {
+type todoResolver struct{ *Resolver }
+
+func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
 	randNumber, _ := rand.Int(rand.Reader, big.NewInt(100))
 	todo := &model.Todo{
-		Text: input.Text,
-		ID:   fmt.Sprintf("T%d", randNumber),
-		User: &model.User{ID: input.UserID, Name: "user " + input.UserID},
+		Text:   input.Text,
+		ID:     fmt.Sprintf("T%d", randNumber),
+		UserID: input.UserID,
 	}
 	r.todos = append(r.todos, todo)
 	return todo, nil
+}
+
+func (r *todoResolver) User(ctx context.Context, obj *model.Todo) (*model.User, error) {
+	return &model.User{ID: obj.UserID, Name: "user " + obj.UserID}, nil
 }
 
 type queryResolver struct{ *Resolver }
