@@ -1,4 +1,4 @@
-package gqlgen_todos
+package graph
 
 //go:generate go run github.com/99designs/gqlgen generate
 
@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math/big"
 
+	"github.com/marianavif/gqlgen-todos/graph/generated"
 	"github.com/marianavif/gqlgen-todos/graph/model"
 ) // THIS CODE IS A STARTING POINT ONLY. IT WILL NOT BE UPDATED WITH SCHEMA CHANGES.
 
@@ -15,11 +16,15 @@ type Resolver struct {
 	todos []*model.Todo
 }
 
-func (r *Resolver) Mutation() MutationResolver {
+func (r *Resolver) Mutation() generated.MutationResolver {
 	return &mutationResolver{r}
 }
-func (r *Resolver) Query() QueryResolver {
+func (r *Resolver) Query() generated.QueryResolver {
 	return &queryResolver{r}
+}
+
+func (r *Resolver) Todo() generated.TodoResolver {
+	return &todoResolver{r}
 }
 
 type mutationResolver struct{ *Resolver }
